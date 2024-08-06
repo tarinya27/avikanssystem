@@ -153,7 +153,7 @@ class _SignInScreen extends State<SignInScreen>{
                       SizedBox(height: 30),
                       ElevatedButton.icon(
                         onPressed: () {
-                          // Handle login button press
+                          login();
                         },
                         icon: Icon(Icons.login),
                         label: Text("Login"),
