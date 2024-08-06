@@ -1,6 +1,20 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:io';
 
-class SignInScreen extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
+import 'package:mysql1/mysql1.dart';
+
+class SignInScreen extends StatefulWidget {
+  @override
+  _SignInScreen createState() => _SignInScreen();
+}
+
+class _SignInScreen extends State<SignInScreen>{
+   final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,7 +130,9 @@ class SignInScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 10),
                       TextField(
+                        controller: emailController,
                         decoration: InputDecoration(
+                          
                           labelText: "Username",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
@@ -125,6 +141,7 @@ class SignInScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       TextField(
+                        controller: passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
                           labelText: "Password",
@@ -160,5 +177,58 @@ class SignInScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+
+   Future<void> login() async {
+    final String username = emailController.text;
+    final String password = passwordController.text;
+     final String url ="http://192.168.208.123:8080/api/v1";
+
+    final response = await http.get(
+      Uri.parse('$url/login/getUsernamePassword/$username/$password'),
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic>? responseData = json.decode(response.body);
+
+      if (responseData != null && responseData.containsKey('user_type_id')) {
+
+         final int adminType = responseData['user_type_id'] as int;
+        final String username = responseData['username'] as String;
+     
+        if (adminType == 1) {
+          print(adminType);
+          // Navigator.push(
+            
+             
+            
+          // );
+        } else if (adminType == 2) {
+          // Navigator.push(
+          //   context, 
+           
+          // );
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+              
+          //   ),
+          
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Invalid admin type. Please contact support.'),
+            ),
+          );
+        }
+      
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Invalid username or password. Please try again.'),
+        ),
+      );
+    }
   }
 }
