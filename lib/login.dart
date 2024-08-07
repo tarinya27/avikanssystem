@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
+import "package:get/get.dart";
 import 'package:mysql1/mysql1.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -12,16 +12,16 @@ class SignInScreen extends StatefulWidget {
   _SignInScreen createState() => _SignInScreen();
 }
 
-class _SignInScreen extends State<SignInScreen>{
-   final emailController = TextEditingController();
+class _SignInScreen extends State<SignInScreen> {
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: Container(
-          width: 900,
-          height: 500,
+          width: 800,
+          height: 400,
           child: Row(
             children: [
               // Left Panel with Logo and Gradient Background
@@ -40,7 +40,7 @@ class _SignInScreen extends State<SignInScreen>{
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.all(32.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -49,15 +49,14 @@ class _SignInScreen extends State<SignInScreen>{
                           "WELCOME",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 15,
-                            
+                            fontSize: 32,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         SizedBox(height: 20),
                         // Logo Image
                         CircleAvatar(
-                          radius: 40,
+                          radius: 60,
                           backgroundColor: Colors.white,
                           child: ClipOval(
                             child: Image.asset(
@@ -75,7 +74,7 @@ class _SignInScreen extends State<SignInScreen>{
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 15,
+                            fontSize: 16,
                           ),
                         ),
                       ],
@@ -122,17 +121,16 @@ class _SignInScreen extends State<SignInScreen>{
                         child: Text(
                           "LOGIN",
                           style: TextStyle(
-                            fontSize: 30,
+                            fontSize: 32,
                             fontWeight: FontWeight.bold,
                             color: Colors.white, // Required for ShaderMask
                           ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 20),
                       TextField(
                         controller: emailController,
                         decoration: InputDecoration(
-                          
                           labelText: "Username",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
@@ -179,11 +177,10 @@ class _SignInScreen extends State<SignInScreen>{
     );
   }
 
-
-   Future<void> login() async {
+  Future<void> login() async {
     final String username = emailController.text;
     final String password = passwordController.text;
-     final String url ="http://192.168.208.123:8080/api/v1";
+    final String url = "http://192.168.208.123:8080/api/v1";
 
     final response = await http.get(
       Uri.parse('$url/login/getUsernamePassword/$username/$password'),
@@ -193,27 +190,23 @@ class _SignInScreen extends State<SignInScreen>{
       final Map<String, dynamic>? responseData = json.decode(response.body);
 
       if (responseData != null && responseData.containsKey('user_type_id')) {
-
-         final int adminType = responseData['user_type_id'] as int;
+        final int adminType = responseData['user_type_id'] as int;
         final String username = responseData['username'] as String;
-     
+
         if (adminType == 1) {
           print(adminType);
           // Navigator.push(
-            
-             
-            
+
           // );
         } else if (adminType == 2) {
           // Navigator.push(
-          //   context, 
-           
+          //   context,
+
           // );
           // ScaffoldMessenger.of(context).showSnackBar(
           //   SnackBar(
-              
+
           //   ),
-          
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -221,7 +214,6 @@ class _SignInScreen extends State<SignInScreen>{
             ),
           );
         }
-      
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
