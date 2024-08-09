@@ -8,7 +8,7 @@ import 'package:flutter_application_1/User.dart';
 import 'package:flutter_application_1/UserManage.dart';
 import 'package:flutter_application_1/Customer.dart';
 import 'package:flutter_application_1/CustomerManage.dart';
-
+import 'package:flutter_application_1/panel.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,11 +19,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: RegisterEmployee(),
-      // home: EmployeeView(),
-      // home: RegisterSupplier(),
-      // home: UserManegeView(),
+      //home: RegisterCustomer(),
+      //home:CustomerView(),
+      //home: RegisterEmployee(),
+      //home: SupplierView(),
+      //home:RegisterUser(),
+      //home: RegisterSupplier(),
+      //home: UserManageView(),
+      home: Panel(),
     );
   }
 }
-

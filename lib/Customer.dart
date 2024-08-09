@@ -22,7 +22,7 @@ class _RegisterCustomerState extends State<RegisterCustomer> {
     super.initState();
   }
 
-  Future<void> _registerCoustomer() async {
+  Future<void> _registerCustomer() async {
     final uri = 'https://free-skylark-sadly.ngrok-free.app';
     final url = Uri.parse('$uri/api/v1/customer/saveCustomer');
 
@@ -133,7 +133,7 @@ class _RegisterCustomerState extends State<RegisterCustomer> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    _registerCoustomer();
+                    _registerCustomer();
                   }
                 },
                 child: Text('Register Customer'),

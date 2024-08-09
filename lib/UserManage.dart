@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class UserManegeView extends StatefulWidget {
+class UserManageView extends StatefulWidget {
   @override
    _UserViewState createState() =>  _UserViewState();
 }
 
-class _UserViewState extends State<UserManegeView> {
+class _UserViewState extends State<UserManageView> {
   List<dynamic> employees = [];
   List<dynamic> filteredEmployees = [];
   bool isLoading = true;
