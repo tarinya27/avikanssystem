@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      //home: RegisterCustomer(),
+      home: RegisterCustomer(),
       //home:CustomerView(),
       //home: RegisterEmployee(),
       //home: SupplierView(),
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       //home: RegisterSupplier(),
       //home: UserManageView(),
       //home: Panel(),
-      home: Dashboard(role: 'admin',),
+      //home: Dashboard(role: 'admin',),
     );
   }
 }
