@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/login.dart';
+import 'package:flutter_application_1/dashboard.dart';
 import 'dart:ui';
 
 void main() {
@@ -102,7 +103,8 @@ class _PanelState extends State<Panel> {
                       // Left panel
                       Container(
                         width: constraints.maxWidth * 0.25, // Responsive width
-                        color: Colors.grey[200]?.withOpacity(0.5), // glass effect
+                        color:
+                            Colors.grey[200]?.withOpacity(0.5), // glass effect
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -111,7 +113,9 @@ class _PanelState extends State<Panel> {
                               radius: 50, // Increased size
                               backgroundImage: AssetImage('images/logo.jpg'),
                             ),
-                            Divider(color: Colors.black, thickness: 2), // Darker divider
+                            Divider(
+                                color: Colors.black,
+                                thickness: 2), // Darker divider
                             // Home button
                             ListTile(
                               leading: Icon(Icons.home),
@@ -120,7 +124,9 @@ class _PanelState extends State<Panel> {
                                 _onItemTapped(0); // Navigate to Home view
                               },
                             ),
-                            Divider(color: Colors.black, thickness: 2), // Darker divider
+                            Divider(
+                                color: Colors.black,
+                                thickness: 2), // Darker divider
                             // Dashboard button
                             ListTile(
                               leading: Icon(Icons.dashboard),
@@ -129,7 +135,9 @@ class _PanelState extends State<Panel> {
                                 _onItemTapped(1); // Navigate to Dashboard view
                               },
                             ),
-                            Divider(color: Colors.black, thickness: 2), // Darker divider
+                            Divider(
+                                color: Colors.black,
+                                thickness: 2), // Darker divider
                             // Account button
                             ListTile(
                               leading: Icon(Icons.account_circle),
@@ -138,7 +146,9 @@ class _PanelState extends State<Panel> {
                                 _onItemTapped(2); // Navigate to Account view
                               },
                             ),
-                            Divider(color: Colors.black, thickness: 2), // Darker divider
+                            Divider(
+                                color: Colors.black,
+                                thickness: 2), // Darker divider
                             // Log out button at the bottom
                             ListTile(
                               leading: Icon(Icons.logout),
@@ -158,7 +168,8 @@ class _PanelState extends State<Panel> {
                       Expanded(
                         child: Container(
                           color: Colors.white.withOpacity(0.5), //glass effect
-                          child: _getSelectedView(), // Display the selected view
+                          child:
+                              _getSelectedView(), // Display the selected view
                         ),
                       ),
                     ],

@@ -93,6 +93,12 @@ flutter:
   assets:
       - images/logo.jpg
       - images/panel_wallpaper.jpeg
+      - images/Admin_dash.jpg
+      - images/check point.png
+      - images/status.jpg
+      - images/profit.jpg
+
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

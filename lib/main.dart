@@ -9,6 +9,8 @@ import 'package:flutter_application_1/UserManage.dart';
 import 'package:flutter_application_1/Customer.dart';
 import 'package:flutter_application_1/CustomerManage.dart';
 import 'package:flutter_application_1/panel.dart';
+//import 'package:flutter_application_1/admin_dash.dart';
+import 'package:flutter_application_1/dashboard.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,7 +28,8 @@ class MyApp extends StatelessWidget {
       //home:RegisterUser(),
       //home: RegisterSupplier(),
       //home: UserManageView(),
-      home: Panel(),
+      //home: Panel(),
+      home: Dashboard(role: 'admin',),
     );
   }
 }
