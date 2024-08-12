@@ -24,38 +24,38 @@ class _RegisterUserState extends State<RegisterUser> {
   }
 
   Future<void> _fetchUserTypes() async {
-    final uri = '';
-    final url = Uri.parse('https://free-skylark-sadly.ngrok-free.app/api/v1/user/getAllUserTypes');
+    final url = Uri.parse(
+        'https://free-skylark-sadly.ngrok-free.app/api/v1/user/getAllUserTypes');
 
-    final response = await http.get(url);
+    try {
+      final response = await http.get(url);
 
-    if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
-      // final data = jsonDecode(response.body);
-       if (jsonResponse['code'] == "00") {
-         final List<dynamic> content = jsonResponse['content'];
 
-         setState(() {
-        _userTypes = content
-            .map<Map<String, dynamic>>((item) => {
-                  "id": item['id'].toString(),
-                  "name": item['name']
-                })
-            .toList();
+      if (jsonResponse['code'] == "00") {
+        final List<dynamic> content = jsonResponse['content'];
 
-        if (_userTypes.isNotEmpty) {
-          _selectedUserType = _userTypes[0]['id'];
-        }
-      });
+        setState(() {
+          _userTypes = content
+              .map<Map<String, dynamic>>(
+                  (item) => {"id": item['id'].toString(), "name": item['name']})
+              .toList();
 
-       }
-     
-
-      
-    } else {
-      // Handle error
+          if (_userTypes.isNotEmpty) {
+            _selectedUserType = _userTypes[1]['id'];
+          }
+        });
+      } else {
+        // Handle API response indicating failure
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content:
+              Text('Failed to load user types: ${jsonResponse['message']}'),
+        ));
+      }
+    } catch (e) {
+      // Handle other errors like network issues
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Failed to load user types'),
+        content: Text('Failed to load user types: $e'),
       ));
     }
   }
@@ -78,20 +78,10 @@ class _RegisterUserState extends State<RegisterUser> {
       }),
     );
 
-    if (response.statusCode == 200) {
-      print(response.body);
-
-      // Registration successful
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('User registered successfully!'),
-      ));
-    } else {
-      print(response.body);
-      // Registration failed
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Failed to register user: ${response.body}'),
-      ));
-    }
+    // Registration successful
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('User registered successfully!'),
+    ));
   }
 
   @override
@@ -162,8 +152,8 @@ class _RegisterUserState extends State<RegisterUser> {
                     _selectedUserType = newValue!;
                   });
                 },
-                items: _userTypes
-                    .map<DropdownMenuItem<String>>((Map<String, dynamic> value) {
+                items: _userTypes.map<DropdownMenuItem<String>>(
+                    (Map<String, dynamic> value) {
                   return DropdownMenuItem<String>(
                     value: value['id'],
                     child: Text(value['name']),
