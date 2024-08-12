@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: RegisterCustomer(),
-      //home:CustomerView(),
+      //home: RegisterCustomer(),
+      home:CustomerView(),
       //home: RegisterEmployee(),
       //home: SupplierView(),
       //home:RegisterUser(),

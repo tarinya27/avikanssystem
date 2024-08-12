@@ -20,7 +20,7 @@ class _CustomerViewState extends State<CustomerView> {
     searchController.addListener(_filterEmployees);
   }
 
-// LOADE Customer
+  // LOADE Customer
   Future<void> _fetchCustomer() async {
     final url = Uri.parse(
         'https://free-skylark-sadly.ngrok-free.app/api/v1/customer/getAllCustomer');
@@ -40,7 +40,6 @@ class _CustomerViewState extends State<CustomerView> {
   // LOADE Customer
 
   // SEARCH Customer
-
   void _filterEmployees() {
     String query = searchController.text.toLowerCase();
     setState(() {
@@ -56,7 +55,6 @@ class _CustomerViewState extends State<CustomerView> {
   // SEARCH Customer
 
   // DELETE Customer
-
   Future<void> _deleteEmployee(String employeeId) async {
     final url = Uri.parse(
         'https://free-skylark-sadly.ngrok-free.app/api/v1/customer/deleteCustomer/$employeeId');
@@ -71,7 +69,6 @@ class _CustomerViewState extends State<CustomerView> {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text('Employee deleted successfully')));
   }
-
   // DELETE Customer
 
   // UPDATE Customer
@@ -105,57 +102,88 @@ class _CustomerViewState extends State<CustomerView> {
       throw Exception('Failed to update Customer');
     }
   }
-//UPDATE EMPLOYE
+  //UPDATE EMPLOYEE
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Customer List'),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: searchController,
-              decoration: InputDecoration(
-                labelText: 'Search Customer',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+      body: Container(
+        color: Color(0xFF420F57), 
+        child: Center(
+          child: Container(
+            margin: EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(16.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8.0,
+                  spreadRadius: 4.0,
                 ),
-              ),
+              ],
+              border: Border.all(color: Colors.white.withOpacity(0.3)),
             ),
-          ),
-          Expanded(
-            child: isLoading
-                ? Center(child: CircularProgressIndicator())
-                : ListView.builder(
-                    itemCount: filteredEmployees.length,
-                    itemBuilder: (context, index) {
-                      final employee = filteredEmployees[index];
-                      return ListTile(
-                        leading: CircleAvatar(
-                          child: Text(employee['first_name'][0]),
-                        ),
-                        title: Text(
-                            '${employee['first_name']} ${employee['last_name']}'),
-                        subtitle: Text('Company: ${employee['company']}'),
-                        onTap: () {
-                          _showEmployeeDetails(employee);
-                        },
-                        trailing: IconButton(
-                          icon: Icon(Icons.delete, color: Colors.red),
-                          onPressed: () {
-                            _confirmDeleteEmployee(employee['id'].toString());
+            child: Column(
+              children: [
+                SizedBox(height: 16.0),
+                Text(
+                  'Customer List',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      labelText: 'Search Customer',
+                      prefixIcon: Icon(Icons.search),
+                      filled: true,
+                      fillColor: Colors.white.withOpacity(0.8),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : ListView.builder(
+                          itemCount: filteredEmployees.length,
+                          itemBuilder: (context, index) {
+                            final employee = filteredEmployees[index];
+                            return ListTile(
+                              leading: CircleAvatar(
+                                child: Text(employee['first_name'][0]),
+                              ),
+                              title: Text(
+                                  '${employee['first_name']} ${employee['last_name']}'),
+                              subtitle: Text('Company: ${employee['company']}'),
+                              onTap: () {
+                                _showEmployeeDetails(employee);
+                              },
+                              trailing: IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  _confirmDeleteEmployee(
+                                      employee['id'].toString());
+                                },
+                              ),
+                            );
                           },
                         ),
-                      );
-                    },
-                  ),
+                ),
+              ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }
