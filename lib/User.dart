@@ -24,7 +24,44 @@ class _RegisterUserState extends State<RegisterUser> {
   @override
   void initState() {
     super.initState();
-    // _fetchUserTypes(); // Commented out since we are using static user types
+    _fetchUserTypes();
+  }
+
+  Future<void> _fetchUserTypes() async {
+    final uri = '';
+    final url = Uri.parse('https://free-skylark-sadly.ngrok-free.app/api/v1/user/getAllUserTypes');
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      // final data = jsonDecode(response.body);
+       if (jsonResponse['code'] == "00") {
+         final List<dynamic> content = jsonResponse['content'];
+
+         setState(() {
+        _userTypes = content
+            .map<Map<String, dynamic>>((item) => {
+                  "id": item['id'].toString(),
+                  "name": item['name']
+                })
+            .toList();
+
+        if (_userTypes.isNotEmpty) {
+          _selectedUserType = _userTypes[0]['id'];
+        }
+      });
+
+       }
+     
+
+      
+    } else {
+      // Handle error
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Failed to load user types'),
+      ));
+    }
   }
 
   Future<void> _registerEmployee() async {
@@ -46,11 +83,14 @@ class _RegisterUserState extends State<RegisterUser> {
 
     if (response.statusCode == 200) {
       print(response.body);
+
+      // Registration successful
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('User registered successfully!'),
       ));
     } else {
       print(response.body);
+      // Registration failed
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Failed to register user: ${response.body}'),
       ));
@@ -60,155 +100,88 @@ class _RegisterUserState extends State<RegisterUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF9FAFB),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.6),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  spreadRadius: 4,
-                  blurRadius: 8,
-                  offset: Offset(0, 4), 
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'USER REGISTRATION',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.deepPurple,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'First Name',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.person),
-                      ),
-                      onSaved: (value) {
-                        _firstName = value!;
-                      },
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter a first name';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 16),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Last Name',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.person),
-                      ),
-                      onSaved: (value) {
-                        _lastName = value!;
-                      },
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter a last name';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 16),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Username',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.person_outline),
-                      ),
-                      onSaved: (value) {
-                        _username = value!;
-                      },
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter a username';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 16),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.lock),
-                      ),
-                      obscureText: true,
-                      onSaved: (value) {
-                        _password = value!;
-                      },
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter a password';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 16),
-                    DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        labelText: 'User Type',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.assignment_ind),
-                      ),
-                      value: _selectedUserType.isNotEmpty ? _selectedUserType : null,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedUserType = newValue!;
-                        });
-                      },
-                      items: _userTypes
-                          .map<DropdownMenuItem<String>>((Map<String, dynamic> value) {
-                        return DropdownMenuItem<String>(
-                          value: value['id'],
-                          child: Text(value['name']),
-                        );
-                      }).toList(),
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepPurple,
-                        padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
-                        textStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          _registerEmployee();
-                        }
-                      },
-                     child: Text(
-                        'Register',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                     ),
-                    ),
-                  ],
-                ),
+      appBar: AppBar(
+        title: Text('Register User'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: <Widget>[
+              TextFormField(
+                decoration: InputDecoration(labelText: 'First Name'),
+                onSaved: (value) {
+                  _firstName = value!;
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter a first name';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Last Name'),
+                onSaved: (value) {
+                  _lastName = value!;
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter a last name';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Password'),
+                onSaved: (value) {
+                  _password = value!;
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter a password';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Username'),
+                onSaved: (value) {
+                  _username = value!;
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter a username';
+                  }
+                  return null;
+                },
+              ),
+              DropdownButtonFormField<String>(
+                decoration: InputDecoration(labelText: 'User Type'),
+                value: _selectedUserType.isNotEmpty ? _selectedUserType : null,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedUserType = newValue!;
+                  });
+                },
+                items: _userTypes
+                    .map<DropdownMenuItem<String>>((Map<String, dynamic> value) {
+                  return DropdownMenuItem<String>(
+                    value: value['id'],
+                    child: Text(value['name']),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    _registerEmployee();
+                  }
+                },
+                child: Text('Register User'),
               ),
             ),
           ),
