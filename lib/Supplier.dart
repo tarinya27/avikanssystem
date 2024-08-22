@@ -79,7 +79,7 @@ class _RegisterSupplierState extends State<RegisterSupplier> {
                   mainAxisSize: MainAxisSize.min, 
                   children: <Widget>[
                     Text(
-                      'Supplier Registration',
+                      'SUPPLIER REGISTRATION',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
