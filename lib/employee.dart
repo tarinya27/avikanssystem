@@ -10,61 +10,70 @@ class RegisterEmployee extends StatefulWidget {
 class _RegisterEmployeeState extends State<RegisterEmployee> {
   final _formKey = GlobalKey<FormState>();
 
-  String _firstName = '';
-  String _lastName = '';
-  String _nic = '';
-  String _email = '';
-  String _address = '';
-  String _mobile = '';
-  DateTime _registerDate = DateTime.now();
-  String _bankDetails = '';
-  String _employeeType = '1';
-  String _departmentId = '2';
+  // Controllers for text fields
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _nicController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _mobileNoController = TextEditingController();
+  final TextEditingController _bankDetailsController = TextEditingController();
 
-  final List<String> _employeeTypes = ['1', 'Part-Time', 'Contract'];
+  // Department Dropdown items
   final List<String> _departments = [
-    '2',
-    'Finance',
-    'Engineering',
-    'Marketing'
+    'Fabrication',
+    'Lathe',
+    'Polishing',
+    'Spinning',
+    'Painting',
+    'Casting',
+    'Assemble'
   ];
+  String? _selectedDepartment;
 
   Future<void> _registerEmployee() async {
-    final  uri = 'https://free-skylark-sadly.ngrok-free.app';
+    if (_formKey.currentState!.validate() && _selectedDepartment != null) {
+      final url = Uri.parse(
+          'https://free-skylark-sadly.ngrok-free.app/api/v1/employee/saveEmployee');
 
-    final url = Uri.parse(
-        'https://free-skylark-sadly.ngrok-free.app/api/v1/employee/saveEmployee');
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "first_name": _firstNameController.text,
+          "last_name": _lastNameController.text,
+          "address": _addressController.text,
+          "nic": _nicController.text,
+          "email": _emailController.text,
+          "mobile": _mobileNoController.text,
+          "bank_details": _bankDetailsController.text,
+          "departments": _selectedDepartment,
+        }),
+      );
 
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        "first_name": _firstName,
-        "last_name": _lastName,
-        "address": _address,
-        "nic": _nic,
-        "email": _email,
-        "mobile": _mobile,
-        "bank_details": _bankDetails,
-        "employeeType": {"id": _employeeType},
-        "department_id": _departmentId
-      }),
-    );
+      if (response.statusCode == 200) {
+        print(response.body);
 
-    if (response.statusCode == 200) {
-      print(response.body);
-
-      // Registration successful
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Employee registered successfully!'),
-      ));
+        // Registration successful
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Employee registered successfully!'),
+          backgroundColor: Colors.green,
+        ));
+      } else {
+        print(response.body);
+        // Registration failed
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Registration failed: ${response.body}'),
+          backgroundColor: Colors.red,
+        ));
+      }
     } else {
-      print(response.body);
-      // Registration failed
+      
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(response.body),
+        content: Text('All fields are required, including the department.'),
+        backgroundColor: Colors.red,
       ));
     }
   }
@@ -72,162 +81,166 @@ class _RegisterEmployeeState extends State<RegisterEmployee> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Register Employee'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: <Widget>[
-              TextFormField(
-                decoration: InputDecoration(labelText: 'First Name'),
-                onSaved: (value) {
-                  _firstName = value!;
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a first name';
-                  }
-                  return null;
-                },
+      backgroundColor: Colors.grey[100], 
+      body: Center(
+        child: Card(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
+          margin: EdgeInsets.symmetric(horizontal: 20, vertical: 40), 
+          child: Padding(
+            padding: const EdgeInsets.all(20.0), 
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Employee Registration',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    _buildTextFormField(
+                      controller: _firstNameController,
+                      labelText: 'First Name',
+                      icon: Icons.person,
+                      validator: (value) => value!.isEmpty ? 'First Name is required' : null,
+                    ),
+                    SizedBox(height: 12),
+                    _buildTextFormField(
+                      controller: _lastNameController,
+                      labelText: 'Last Name',
+                      icon: Icons.person_outline,
+                      validator: (value) => value!.isEmpty ? 'Last Name is required' : null,
+                    ),
+                    SizedBox(height: 12),
+                    _buildTextFormField(
+                      controller: _addressController,
+                      labelText: 'Address',
+                      icon: Icons.home,
+                      validator: (value) => value!.isEmpty ? 'Address is required' : null,
+                    ),
+                    SizedBox(height: 12),
+                    _buildTextFormField(
+                      controller: _nicController,
+                      labelText: 'NIC',
+                      icon: Icons.perm_identity,
+                      validator: (value) => value!.isEmpty ? 'NIC is required' : null,
+                    ),
+                    SizedBox(height: 12),
+                    _buildTextFormField(
+                      controller: _mobileNoController,
+                      labelText: 'Mobile No',
+                      icon: Icons.phone,
+                      validator: (value) => value!.isEmpty ? 'Mobile No is required' : null,
+                    ),
+                    SizedBox(height: 12),
+                    _buildTextFormField(
+                      controller: _emailController,
+                      labelText: 'Email Address',
+                      icon: Icons.email,
+                      validator: (value) => value!.isEmpty ? 'Email Address is required' : null,
+                    ),
+                    SizedBox(height: 12),
+                    _buildTextFormField(
+                      controller: _bankDetailsController,
+                      labelText: 'Bank Details',
+                      icon: Icons.account_balance,
+                      validator: (value) => value!.isEmpty ? 'Bank Details are required' : null,
+                    ),
+                    SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity, 
+                      child: DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          labelText: 'Department',
+                          prefixIcon: Icon(Icons.work),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white, 
+                        ),
+                        value: _selectedDepartment,
+                        items: _departments
+                            .map((department) => DropdownMenuItem<String>(
+                                  value: department,
+                                  child: Text(department),
+                                ))
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedDepartment = value;
+                          });
+                        },
+                        validator: (value) => value == null ? 'Department is required' : null,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _registerEmployee(); 
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple, 
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30), 
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 40),
+                        shadowColor: Colors.deepPurpleAccent, 
+                        elevation: 10, 
+                      ),
+                      child: Text(
+                        'Register',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Last Name'),
-                onSaved: (value) {
-                  _lastName = value!;
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a last name';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'NIC'),
-                onSaved: (value) {
-                  _nic = value!;
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter NIC';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Email'),
-                onSaved: (value) {
-                  _email = value!;
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter an email';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Address'),
-                onSaved: (value) {
-                  _address = value!;
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter an address';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                
-                decoration: InputDecoration(labelText: 'Mobile'),
-                onSaved: (value) {
-                  _mobile = value!;
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a mobile number';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Bank Details'),
-                onSaved: (value) {
-                  _bankDetails = value!;
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter bank details';
-                  }
-                  return null;
-                },
-              ),
-              ListTile(
-                title: Text(
-                    'Register Date: ${_registerDate.toLocal()}'.split(' ')[0]),
-                trailing: Icon(Icons.calendar_today),
-                onTap: () async {
-                  DateTime? picked = await showDatePicker(
-                    context: context,
-                    initialDate: _registerDate,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2101),
-                  );
-                  if (picked != null && picked != _registerDate)
-                    setState(() {
-                      _registerDate = picked;
-                    });
-                },
-              ),
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(labelText: 'Employee Type'),
-                value: _employeeType,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _employeeType = newValue!;
-                  });
-                },
-                items: _employeeTypes
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(labelText: 'Department ID'),
-                value: _departmentId,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _departmentId = newValue!;
-                  });
-                },
-                items:
-                    _departments.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    _registerEmployee();
-                  }
-                },
-                child: Text('Register'),
-              ),
-            ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  
+  Widget _buildTextFormField({
+    required TextEditingController controller,
+    required String labelText,
+    required IconData icon,
+    required FormFieldValidator<String> validator,
+  }) {
+    return SizedBox(
+      width: double.infinity, // Full width for the TextFormField
+      child: TextFormField(
+        controller: controller,
+        maxLength: 50, // Limit the input length to 50 characters
+        decoration: InputDecoration(
+          labelText: labelText,
+          prefixIcon: Icon(icon, color: Colors.deepPurple),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          filled: true,
+          fillColor: Colors.white, 
+          counterText: '', 
+        ),
+        validator: validator, 
       ),
     );
   }
