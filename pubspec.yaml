@@ -95,8 +95,32 @@ flutter:
       - images/panel_wallpaper.jpeg
       - images/Admin_dash.jpg
       - images/check point.png
-      - images/status.jpg
-      - images/profit.jpg
+      - images/customers.png
+      - images/products.png
+      - images/job.png
+      - images/ptype.png
+      - images/mcost.png
+      - images/mapproval.png
+      - images/lcost.png
+      - images/lapproval.png
+      - images/mtype.png
+      - images/material.png
+      - images/attendance.png
+      - images/salary.png
+      - images/supplier.png
+      - images/grn.png
+      - images/gdn.png
+      - images/r2.png
+      - images/r1.png
+      - images/r3.png
+      - images/r4.png
+      - images/r5.png
+      - images/emp.png
+      - images/wp.png
+      - images/mc.png
+      - images/dc.png
+
+
       
 
 

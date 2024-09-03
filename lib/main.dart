@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/HomePage.dart';
 import 'package:flutter_application_1/login.dart';
 import 'package:flutter_application_1/employee.dart';
 import 'package:flutter_application_1/employeeView.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_application_1/CustomerManage.dart';
 import 'package:flutter_application_1/panel.dart';
 import 'package:flutter_application_1/manage.dart';
 import 'package:flutter_application_1/dashboard.dart';
+import 'package:flutter_application_1/HomePage.dart';
 
 
 void main() {
@@ -31,8 +33,9 @@ class MyApp extends StatelessWidget {
       //home: RegisterUser(),
       //home: UserManageView(),
       //home: Panel(),
-        home: Manage(),
+      //home: Manage(),
       //home: Dashboard(role: 'admin',),
+        home: HomePage(),
     );
   }
 }
